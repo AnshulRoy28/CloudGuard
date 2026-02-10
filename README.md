@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
 </p>
 
-<h1 align="center">🛡️ CloudGuard AI</h1>
+<h1 align="center">🛡️ CloudGuard</h1>
 <h3 align="center">Autonomous FinOps Agent for Google Cloud</h3>
 
 <p align="center">
