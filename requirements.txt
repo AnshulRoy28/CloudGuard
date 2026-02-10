@@ -1,0 +1,43 @@
+# Core dependencies
+google-cloud-bigquery>=3.15.0
+google-cloud-compute>=1.16.0
+google-cloud-storage>=2.14.0
+google-cloud-logging>=3.8.0
+google-generativeai>=0.3.0
+
+# API framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.5.0
+
+# Authentication & Security
+PyJWT>=2.8.0
+cryptography>=42.0.0
+
+# Notifications
+sendgrid>=6.11.0
+
+# Data processing
+pandas>=2.1.0
+numpy>=1.26.0
+
+# Redis (optional for idempotency)
+redis>=5.0.0
+
+# Template rendering
+jinja2>=3.1.2
+
+# Configuration
+python-dotenv>=1.0.0
+pyyaml>=6.0.1
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+httpx>=0.26.0  # For testing FastAPI
+
+# Development
+black>=24.1.0
+flake8>=7.0.0
+mypy>=1.8.0

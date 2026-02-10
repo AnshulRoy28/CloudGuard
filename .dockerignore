@@ -1,0 +1,56 @@
+# Git files
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+*.env
+
+# Credentials (never include in container)
+*-sa-key.json
+*.json
+!package.json
+
+# Development
+*.log
+*.tmp
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Terraform
+infrastructure/
+.terraform/
+*.tfstate*
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Documentation
+*.md
+docs/
+
+# Scripts (not needed in container)
+scripts/
+
+# Tests
+tests/

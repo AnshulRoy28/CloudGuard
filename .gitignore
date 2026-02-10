@@ -1,0 +1,75 @@
+# Environment variables and secrets
+.env
+*.env
+!.env.example
+
+# Service account keys
+*.json
+!package*.json
+cloudguard-sa-key.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# OS
+.DS_Store
+Thumbs.db
+
+# CloudGuard specific
+baseline_state.json
+alert_cache/
+scripts/venv/
+
+# Terraform variables (may contain project-specific values)
+terraform.tfvars
+
+# Gemini/AI tools
+.gemini/
+.antigravityignore

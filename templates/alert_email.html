@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudGuard Cost Alert</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, sans-serif !important;}
+    </style>
+    <![endif]-->
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                    
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
+                            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700;">⚠️ Cost Alert</h1>
+                            <p style="color: rgba(255,255,255,0.9); margin: 12px 0 0 0; font-size: 16px;">CloudGuard has detected unusual spending</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Cost Summary -->
+                    <tr>
+                        <td style="padding: 40px 30px; text-align: center; border-bottom: 1px solid #eee;">
+                            <div style="font-size: 56px; font-weight: 800; color: #ef4444; line-height: 1;">${{ "%.2f"|format(current_spend) }}</div>
+                            <div style="color: #666; margin-top: 12px; font-size: 16px;">Month-to-Date Spend ({{ "%.0f"|format(budget_percent) }}% of ${{ "%.0f"|format(budget_limit) }} budget)</div>
+                            
+                            <!-- Severity Badge -->
+                            {% if anomaly.severity == 'critical' %}
+                            <div style="margin-top: 20px; display: inline-block; background: #fef2f2; color: #dc2626; padding: 10px 20px; border-radius: 25px; font-weight: 600; font-size: 14px;">
+                                🚨 CRITICAL: +{{ "%.0f"|format(anomaly.deviation_percent) }}% above baseline
+                            </div>
+                            {% elif anomaly.severity == 'high' %}
+                            <div style="margin-top: 20px; display: inline-block; background: #fff7ed; color: #ea580c; padding: 10px 20px; border-radius: 25px; font-weight: 600; font-size: 14px;">
+                                ⚠️ HIGH: +{{ "%.0f"|format(anomaly.deviation_percent) }}% above baseline
+                            </div>
+                            {% else %}
+                            <div style="margin-top: 20px; display: inline-block; background: #fefce8; color: #ca8a04; padding: 10px 20px; border-radius: 25px; font-weight: 600; font-size: 14px;">
+                                📊 MODERATE: +{{ "%.0f"|format(anomaly.deviation_percent) }}% above baseline
+                            </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    
+                    <!-- Top Contributors -->
+                    <tr>
+                        <td style="padding: 30px;">
+                            <h3 style="margin: 0 0 20px 0; color: #1f2937; font-size: 18px; font-weight: 600;">Top Cost Contributors</h3>
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #f9fafb;">
+                                        <th style="padding: 14px 12px; text-align: left; font-weight: 600; color: #374151; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Service</th>
+                                        <th style="padding: 14px 12px; text-align: left; font-weight: 600; color: #374151; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">SKU</th>
+                                        <th style="padding: 14px 12px; text-align: right; font-weight: 600; color: #374151; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in top_contributors %}
+                                    <tr>
+                                        <td style="padding: 14px 12px; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-size: 14px;">{{ item.service or 'Unknown' }}</td>
+                                        <td style="padding: 14px 12px; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-size: 14px;">{{ item.sku or '-' }}</td>
+                                        <td style="padding: 14px 12px; border-bottom: 1px solid #f3f4f6; color: #1f2937; font-size: 14px; text-align: right; font-weight: 600;">${{ "%.2f"|format(item.cost or 0) }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Action Buttons -->
+                    <tr>
+                        <td style="padding: 30px 30px 40px 30px; background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%); text-align: center;">
+                            <p style="margin: 0 0 24px 0; color: #4b5563; font-size: 16px;">Take action on the top cost contributor:</p>
+                            
+                            <!-- Stop Button -->
+                            <a href="{{ action_urls.stop }}" style="display: inline-block; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; padding: 18px 36px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 16px; margin: 8px; min-width: 140px; box-shadow: 0 4px 14px rgba(239,68,68,0.4);">
+                                🛑 Stop Instance
+                            </a>
+                            
+                            <br style="display: none;">
+                            
+                            <!-- Snapshot Button -->
+                            <a href="{{ action_urls.snapshot }}" style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 18px 36px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 16px; margin: 8px; min-width: 140px; box-shadow: 0 4px 14px rgba(59,130,246,0.4);">
+                                📸 Snapshot & Stop
+                            </a>
+                            
+                            <br>
+                            
+                            <!-- Ignore Button -->
+                            <a href="{{ action_urls.ignore }}" style="display: inline-block; background: #6b7280; color: white; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-weight: 500; font-size: 14px; margin: 8px 8px 0 8px;">
+                                ✓ Ignore This Alert
+                            </a>
+                        </td>
+                    </tr>
+                    
+                    <!-- Action Explanations -->
+                    <tr>
+                        <td style="padding: 24px 30px; background: #f9fafb; border-top: 1px solid #e5e7eb;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="padding: 8px 0; color: #6b7280; font-size: 13px;">
+                                        <strong style="color: #ef4444;">🛑 Stop</strong> — Immediately stops the instance (can restart later)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 0; color: #6b7280; font-size: 13px;">
+                                        <strong style="color: #3b82f6;">📸 Snapshot</strong> — Creates a backup, then stops the instance (safest)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 0; color: #6b7280; font-size: 13px;">
+                                        <strong>✓ Ignore</strong> — Dismisses this alert with no action taken
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 24px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                            <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+                                CloudGuard AI • Autonomous FinOps Agent
+                            </p>
+                            <p style="margin: 8px 0 0 0; color: #9ca3af; font-size: 12px;">
+                                ⏱️ Action links expire in 4 hours • Generated at {{ timestamp }}
+                            </p>
+                        </td>
+                    </tr>
+                    
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
